@@ -75,7 +75,7 @@ namespace RocketLeagueGameDataAPI
 		/// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
 		/// <exception cref="OperationCanceledException"/>
 		/// <exception cref="ArgumentOutOfRangeException"/>
-		public async ValueTask ConnectAsync(int port, CancellationToken cancellationToken = default)
+		public async ValueTask ConnectAsync(int port = gamePort, CancellationToken cancellationToken = default)
 		{
 			await _tcpClient.ConnectAsync(new IPEndPoint(IPAddress.Loopback, port), cancellationToken);
 		}
@@ -91,7 +91,7 @@ namespace RocketLeagueGameDataAPI
 		/// <exception cref="ObjectDisposedException"/>
 		/// <exception cref="System.Security.SecurityException"/>
 		/// <exception cref="ArgumentOutOfRangeException"/>
-		public IAsyncResult BeginConnect(int port, AsyncCallback? requestCallback, object? state)
+		public IAsyncResult BeginConnect(int port = gamePort, AsyncCallback? requestCallback, object? state)
 		{
 			return _tcpClient.BeginConnect(IPAddress.Loopback, port, requestCallback, state);
 		}
