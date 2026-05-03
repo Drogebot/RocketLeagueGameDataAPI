@@ -4,6 +4,24 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Title>RocketLeagueGameDataAPI</Title>
+    <Authors>Drogings</Authors>
+    <Description>A Rocket League Game Data API Wrapper</Description>
+    <PackageProjectUrl>https://github.com/Drogebot/RocketLeagueGameDataAPI</PackageProjectUrl>
+    <Copyright>© 2026</Copyright>
+    <RepositoryUrl>https://github.com/Drogebot/RocketLeagueGameDataAPI.git</RepositoryUrl>
+    <PackageTags>rocket league,rocket,league,api,game data,stats</PackageTags>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReadmeFile></PackageReadmeFile>
+    <SignAssembly>False</SignAssembly>
+    <VersionPrefix>1.0.0</VersionPrefix>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
