@@ -91,7 +91,7 @@ namespace RocketLeagueGameDataAPI
 		/// <exception cref="ObjectDisposedException"/>
 		/// <exception cref="System.Security.SecurityException"/>
 		/// <exception cref="ArgumentOutOfRangeException"/>
-		public IAsyncResult BeginConnect(int port = gamePort, AsyncCallback? requestCallback, object? state)
+		public IAsyncResult BeginConnect(int port, AsyncCallback? requestCallback, object? state)
 		{
 			return _tcpClient.BeginConnect(IPAddress.Loopback, port, requestCallback, state);
 		}
