@@ -1,7 +1,7 @@
 ﻿using RocketLeagueGameDataAPI;
 using System.Net.Sockets;
 
-namespace Test
+namespace Examples
 {
 	internal class Program
 	{

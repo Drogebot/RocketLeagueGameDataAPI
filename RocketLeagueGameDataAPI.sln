@@ -5,7 +5,7 @@ VisualStudioVersion = 17.14.36930.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocketLeagueGameDataAPI", "RocketLeagueGameDataAPI\RocketLeagueGameDataAPI.csproj", "{2B9D48D5-73EC-441B-927C-62CE2D4B9055}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{976818DA-2FD7-4162-BA57-B8EBA55E862A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Examples.csproj", "{976818DA-2FD7-4162-BA57-B8EBA55E862A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
