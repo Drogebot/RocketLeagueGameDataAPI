@@ -74,6 +74,8 @@ namespace RocketLeagueGameDataAPI.Events
 		BreakoutDamage,
 		/// <summary>Asset name for Ultra Damage.</summary>
 		BreakoutDamageLarge,
+		/// <summary>Asset name for Bicycle Hit.</summary>
+		BicycleHit,
 		/// <summary>Asset name for Low Five.</summary>
 		LowFive,
 		/// <summary>Asset name for High Five.</summary>
