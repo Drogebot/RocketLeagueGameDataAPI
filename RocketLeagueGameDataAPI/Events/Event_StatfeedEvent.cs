@@ -26,7 +26,7 @@ namespace RocketLeagueGameDataAPI.Events
 		/// <summary>
 		/// Player involved in the stat (e.g. the demolished player). Same shape as MainTarget.
 		/// </summary>
-		/// <remarks>CONDITIONAL (Only for <see cref="StatEvent.Demolish"/>)</remarks>
+		/// <remarks>CONDITIONAL (Only for <see cref="StatEvent.Demolish"/>, <see cref="StatEvent.KO_AerialHeavyHit"/>, <see cref="StatEvent.KO_DoubleKO"/>, <see cref="StatEvent.KO_HeavyBlock"/>, <see cref="StatEvent.KO_HeavyHit"/>, <see cref="StatEvent.KO_Knockout"/>, <see cref="StatEvent.KO_KnockoutAssist"/>, <see cref="StatEvent.KO_MassKO"/> &amp; <see cref="StatEvent.KO_TripleKO"/>).</remarks>
 		public PlayerShortcut? SecondaryTarget { get; set; }
 	}
 
@@ -84,5 +84,25 @@ namespace RocketLeagueGameDataAPI.Events
 		HoopsSwishGoal,
 		/// <summary>Asset name for Flip Reset.</summary>
 		FlipReset,
+		/// <summary>Asset name for Aerial Heavy Attack.</summary>
+		KO_AerialHeavyHit,
+		/// <summary>Asset name for Death.</summary>
+		KO_Death,
+		/// <summary>Asset name for Double KO.</summary>
+		KO_DoubleKO,
+		/// <summary>Asset name for Heavy Block.</summary>
+		KO_HeavyBlock,
+		/// <summary>Asset name for Heavy Attack.</summary>
+		KO_HeavyHit,
+		/// <summary>Asset name for Knockout.</summary>
+		KO_Knockout,
+		/// <summary>Asset name for KO Assist.</summary>
+		KO_KnockoutAssist,
+		/// <summary>Asset name for Mass KO.</summary>
+		KO_MassKO,
+		/// <summary>Asset name for Triple KO.</summary>
+		KO_TripleKO,
+		/// <summary>Asset name for KO Winner.</summary>
+		KO_Winner,
 	}
 }
