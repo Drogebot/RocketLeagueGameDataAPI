@@ -12,12 +12,12 @@ If you do at some point run into a problem, please create an issue so I can look
 You can download [the NuGet package](https://www.nuget.org/packages/RocketLeagueGameDataAPI), or build from source.
 
 ## Usage
-```
+```cs
 var rl = new RLGameDataAPI();
 await rl.ConnectAsync();
 
 while(rl.Connected) {
-  var events = rl.ReceiveEvents();
+  var events = await rl.ReceiveEventsAsync();
   foreach (var e in events) {
     Console.WriteLine($"Received {e.EventType} for match {e.MatchGuid}!");
   }

@@ -39,7 +39,7 @@ namespace RocketLeagueGameDataAPI
 			_jsonOptions.Converters.Add(new JsonUniqueNetIdConverter());
 			_jsonOptions.Converters.Add(new JsonStringEnumConverter<EventType>());
 			_jsonOptions.Converters.Add(new JsonStringEnumConverter<StatEvent>());
-			_jsonOptions.MakeReadOnly();
+			_jsonOptions.MakeReadOnly(true);
 			_buffer = new byte[1024 * 4];
 		}
 
@@ -91,7 +91,7 @@ namespace RocketLeagueGameDataAPI
 		/// <exception cref="ObjectDisposedException"/>
 		/// <exception cref="System.Security.SecurityException"/>
 		/// <exception cref="ArgumentOutOfRangeException"/>
-		public IAsyncResult BeginConnect(int port = gamePort, AsyncCallback? requestCallback, object? state)
+		public IAsyncResult BeginConnect(int port, AsyncCallback? requestCallback, object? state)
 		{
 			return _tcpClient.BeginConnect(IPAddress.Loopback, port, requestCallback, state);
 		}
