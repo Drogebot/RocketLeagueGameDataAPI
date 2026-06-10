@@ -9,6 +9,6 @@ namespace RocketLeagueGameDataAPI.Events
 	public class Event_GoalReplayEnd : EventData
 	{
 		[JsonIgnore(Condition = JsonIgnoreCondition.Always)]
-		public override EventType EventType => EventType.ReplayPlaybackEnd;
+		public override EventType EventType => EventType.GoalReplayEnd;
 	}
 }

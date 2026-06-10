@@ -21,12 +21,9 @@ namespace RocketLeagueGameDataAPI
 				EventType.ClockUpdatedSeconds =>  JsonSerializer.Deserialize<Event_ClockUpdatedSeconds>(stream, options),
 				EventType.CountdownBegin =>  JsonSerializer.Deserialize<Event_CountdownBegin>(stream, options),
 				EventType.CrossbarHit =>  JsonSerializer.Deserialize<Event_CrossbarHit>(stream, options),
-				//EventType.GoalReplayEnd =>  JsonSerializer.Deserialize<Event_GoalReplayEnd>(stream, options),
-				EventType.ReplayPlaybackEnd =>  JsonSerializer.Deserialize<Event_GoalReplayEnd>(stream, options),
-				//EventType.GoalReplayStart =>  JsonSerializer.Deserialize<Event_GoalReplayStart>(stream, options),
-				EventType.ReplayPlaybackStart =>  JsonSerializer.Deserialize<Event_GoalReplayStart>(stream, options),
-				//EventType.GoalReplayWillEnd =>  JsonSerializer.Deserialize<Event_GoalReplayWillEnd>(stream, options),
-				EventType.ReplayWillEnd =>  JsonSerializer.Deserialize<Event_GoalReplayWillEnd>(stream, options),
+				EventType.GoalReplayEnd =>  JsonSerializer.Deserialize<Event_GoalReplayEnd>(stream, options),
+				EventType.GoalReplayStart =>  JsonSerializer.Deserialize<Event_GoalReplayStart>(stream, options),
+				EventType.GoalReplayWillEnd =>  JsonSerializer.Deserialize<Event_GoalReplayWillEnd>(stream, options),
 				EventType.GoalScored =>  JsonSerializer.Deserialize<Event_GoalScored>(stream, options),
 				EventType.MatchCreated =>  JsonSerializer.Deserialize<Event_MatchCreated>(stream, options),
 				EventType.MatchInitialized =>  JsonSerializer.Deserialize<Event_MatchInitialized>(stream, options),
@@ -52,12 +49,9 @@ namespace RocketLeagueGameDataAPI
 				EventType.ClockUpdatedSeconds => await JsonSerializer.DeserializeAsync<Event_ClockUpdatedSeconds>(stream, options, cancellationToken),
 				EventType.CountdownBegin => await JsonSerializer.DeserializeAsync<Event_CountdownBegin>(stream, options, cancellationToken),
 				EventType.CrossbarHit => await JsonSerializer.DeserializeAsync<Event_CrossbarHit>(stream, options, cancellationToken),
-				//EventType.GoalReplayEnd => await JsonSerializer.DeserializeAsync<Event_GoalReplayEnd>(stream, options, cancellationToken),
-				EventType.ReplayPlaybackEnd => await JsonSerializer.DeserializeAsync<Event_GoalReplayEnd>(stream, options, cancellationToken),
-				//EventType.GoalReplayStart => await JsonSerializer.DeserializeAsync<Event_GoalReplayStart>(stream, options, cancellationToken),
-				EventType.ReplayPlaybackStart => await JsonSerializer.DeserializeAsync<Event_GoalReplayStart>(stream, options, cancellationToken),
-				//EventType.GoalReplayWillEnd => await JsonSerializer.DeserializeAsync<Event_GoalReplayWillEnd>(stream, options, cancellationToken),
-				EventType.ReplayWillEnd => await JsonSerializer.DeserializeAsync<Event_GoalReplayWillEnd>(stream, options, cancellationToken),
+				EventType.GoalReplayEnd => await JsonSerializer.DeserializeAsync<Event_GoalReplayEnd>(stream, options, cancellationToken),
+				EventType.GoalReplayStart => await JsonSerializer.DeserializeAsync<Event_GoalReplayStart>(stream, options, cancellationToken),
+				EventType.GoalReplayWillEnd => await JsonSerializer.DeserializeAsync<Event_GoalReplayWillEnd>(stream, options, cancellationToken),
 				EventType.GoalScored => await JsonSerializer.DeserializeAsync<Event_GoalScored>(stream, options, cancellationToken),
 				EventType.MatchCreated => await JsonSerializer.DeserializeAsync<Event_MatchCreated>(stream, options, cancellationToken),
 				EventType.MatchInitialized => await JsonSerializer.DeserializeAsync<Event_MatchInitialized>(stream, options, cancellationToken),
@@ -86,15 +80,12 @@ namespace RocketLeagueGameDataAPI
 		CountdownBegin,
 		/// <summary>Sent when the ball hits a crossbar.</summary>
 		CrossbarHit,
-		//GoalReplayEnd,	These 3 are wrong in the API docs
-		//GoalReplayStart,
-		//GoalReplayWillEnd,
 		/// <summary>Sent when a goal replay ends.</summary>
-		ReplayPlaybackEnd,
+		GoalReplayEnd,
 		/// <summary>Sent when a goal replay starts.</summary>
-		ReplayPlaybackStart,
+		GoalReplayStart,
 		/// <summary>Sent when the ball explodes during a goal replay. If the replay is skipped this event will not fire.</summary>
-		ReplayWillEnd,
+		GoalReplayWillEnd,
 		/// <summary>Sent when a goal is scored.</summary>
 		GoalScored,
 		/// <summary>Sent when all teams are created and replicated.</summary>
