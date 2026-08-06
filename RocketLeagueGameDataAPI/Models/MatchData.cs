@@ -11,6 +11,10 @@ namespace RocketLeagueGameDataAPI.Models
 		/// </summary>
 		public required TeamData[] Teams { get; set; }
 		/// <summary>
+		/// Playlist Id of the current match.
+		/// </summary>
+		public required int PlaylistId { get; set; }
+		/// <summary>
 		/// Seconds remaining in the match.
 		/// </summary>
 		public required int TimeSeconds { get; set; }

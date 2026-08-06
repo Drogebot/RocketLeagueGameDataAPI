@@ -10,5 +10,13 @@ namespace RocketLeagueGameDataAPI.Events
 	{
 		[JsonIgnore(Condition = JsonIgnoreCondition.Always)]
 		public override EventType EventType => EventType.ReplayCreated;
+		/// <summary>
+		/// File name of the replay.
+		/// </summary>
+		public required string FileName { get; set; }
+		/// <summary>
+		/// Timestamp the replay was created.
+		/// </summary>
+		public required DateTime Date { get; set; }
 	}
 }

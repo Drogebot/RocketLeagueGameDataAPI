@@ -16,6 +16,6 @@ namespace RocketLeagueGameDataAPI.Events
 		/// <summary>
 		/// Only set for online or LAN matches.
 		/// </summary>
-		public required string MatchGuid { get; set; }
+		public string? MatchGuid { get; set; }
 	}
 }

@@ -1,7 +1,10 @@
-﻿using RocketLeagueGameDataAPI.Events;
+﻿using RocketLeagueGameDataAPI.Commands;
+using RocketLeagueGameDataAPI.Events;
 using RocketLeagueGameDataAPI.JsonConverters;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -35,10 +38,15 @@ namespace RocketLeagueGameDataAPI
 			{
 				RespectNullableAnnotations = true,
 				UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
+				Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
 			};
 			_jsonOptions.Converters.Add(new JsonUniqueNetIdConverter());
+			_jsonOptions.Converters.Add(new JsonDateTimeConverter());
 			_jsonOptions.Converters.Add(new JsonStringEnumConverter<EventType>());
 			_jsonOptions.Converters.Add(new JsonStringEnumConverter<StatEvent>());
+			_jsonOptions.Converters.Add(new JsonStringEnumConverter<BoostType>());
+			_jsonOptions.Converters.Add(new JsonStringEnumConverter<CommandType>());
+			_jsonOptions.Converters.Add(new JsonStringEnumConverter<PerspectiveType>());
 			_jsonOptions.MakeReadOnly(true);
 			_buffer = new byte[1024 * 4];
 		}
@@ -58,7 +66,7 @@ namespace RocketLeagueGameDataAPI
 		/// <summary>
 		/// Connects to the local game using the specified port.
 		/// </summary>
-		/// <param name="port">the port number specified in your DefaultStatsAPI.ini.</param>
+		/// <param name="port">The port number specified in your DefaultStatsAPI.ini.</param>
 		/// <exception cref="SocketException"/>
 		/// <exception cref="ObjectDisposedException"/>
 		/// <exception cref="ArgumentOutOfRangeException"/>
@@ -70,8 +78,7 @@ namespace RocketLeagueGameDataAPI
 		/// <summary>
 		/// Connects to the local game using the specified port as an asynchronous operation.
 		/// </summary>
-		/// <param name="port">the port number specified in your DefaultStatsAPI.ini.</param>
-		/// <param name="cancellationToken"></param>
+		/// <param name="port">The port number specified in your DefaultStatsAPI.ini.</param>
 		/// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
 		/// <exception cref="OperationCanceledException"/>
 		/// <exception cref="ArgumentOutOfRangeException"/>
@@ -83,7 +90,7 @@ namespace RocketLeagueGameDataAPI
 		/// <summary>
 		/// Begins an asynchronous request for a local game connection using the specified port number.
 		/// </summary>
-		/// <param name="port">the port number specified in your DefaultStatsAPI.ini.</param>
+		/// <param name="port">The port number specified in your DefaultStatsAPI.ini.</param>
 		/// <param name="requestCallback">An <see cref="AsyncCallback"/> delegate that references the method to invoke when the operation is complete.</param>
 		/// <param name="state">A user-defined object that contains information about the connect operation. This object is passed to the <paramref name="requestCallback"/> delegate when the operation is complete.</param>
 		/// <returns>An <see cref="IAsyncResult"/> object that references the asynchronous connection.</returns>
@@ -145,7 +152,7 @@ namespace RocketLeagueGameDataAPI
 		/// <summary>
 		/// Reads all available data from the <see cref="NetworkStream"/> and converts it to their corresponding <see cref="EventData"/> as an asynchronous operation.
 		/// </summary>
-		/// <returns>A <see cref="ValueTask"/> representing the asynchronous read operation. The value of its result contains a <see cref="List{T}"/> of received <see cref="EventData"/>.</returns>
+		/// <returns>A <see cref="Task"/> representing the asynchronous read operation. The value of its result contains a <see cref="List{T}"/> of received <see cref="EventData"/>.</returns>
 		/// <exception cref="OperationCanceledException"/>
 		/// <exception cref="InvalidOperationException"/>
 		/// <exception cref="IOException"/>
@@ -167,6 +174,49 @@ namespace RocketLeagueGameDataAPI
 			received.Seek(0, SeekOrigin.Begin);
 			return await ProccessMessageAsync(received, cancellationToken);
 		}
+
+		/// <summary>
+		/// Writes a <see cref="CommandData"/> to the <see cref="NetworkStream"/> to be processed by the game.
+		/// </summary>
+		/// <param name="command">The command to be sent.</param>
+		/// <exception cref="InvalidOperationException"></exception>
+		/// <exception cref="IOException"></exception>
+		/// <exception cref="SocketException"></exception>
+		/// <exception cref="ObjectDisposedException"></exception>
+		public void SendCommand(CommandData command)
+		{
+			var _stream = _tcpClient.GetStream();
+			if (!_stream.CanWrite) throw new Exception("Cannot write to the underlying NetworkStream.");
+
+			var commandMessage = CommandMessage.CreateCommandMessage(command, _jsonOptions);
+			using var stream = new MemoryStream();
+			JsonSerializer.Serialize(stream, commandMessage, _jsonOptions);
+			var test = Encoding.UTF8.GetString(stream.ToArray());
+			test = test.Replace("\\\"", "\"");
+			test = "{\"Command\":\"ChangePOV\",\"Data\":{\"Focus\":\"1\",\"Perspective\":\"PlayerView\"}}";
+			Console.WriteLine(test);
+			_stream.Write(Encoding.UTF8.GetBytes(test));
+			_stream.Flush();
+		}
+
+		/// <summary>
+		/// Writes a <see cref="CommandData"/> to the <see cref="NetworkStream"/> to be processed by the game as an asynchronous operation.
+		/// </summary>
+		/// <param name="command">The command to be sent.</param>
+		/// <returns>A <see cref="Task"/> representing the asynchronous write operation.</returns>
+		/// <exception cref="OperationCanceledException"/>
+		/// <exception cref="InvalidOperationException"></exception>
+		/// <exception cref="IOException"></exception>
+		/// <exception cref="SocketException"></exception>
+		/// <exception cref="ObjectDisposedException"></exception>
+		//public async Task SendCommandAsync(CommandData command, CancellationToken cancellationToken = default)
+		//{
+		//	var _stream = _tcpClient.GetStream();
+		//	if (!_stream.CanWrite) throw new Exception("Cannot write to the underlying NetworkStream.");
+		//
+		//	var commandMessage = CommandMessage.CreateCommandMessage(command, _jsonOptions);
+		//	_stream.Write(commandMessage);
+		//}
 
 		private List<EventData> ProccessMessage(MemoryStream dataStream)
 		{

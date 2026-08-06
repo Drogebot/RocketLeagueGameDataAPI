@@ -1,4 +1,6 @@
 ﻿using RocketLeagueGameDataAPI;
+using RocketLeagueGameDataAPI.Commands;
+using RocketLeagueGameDataAPI.Events;
 using System.Net.Sockets;
 
 namespace Examples
@@ -34,7 +36,18 @@ namespace Examples
 					var events = rl.ReceiveEvents();
 					foreach (var e in events)
 					{
-						Console.WriteLine($"Received {e.EventType} for match {e.MatchGuid}!");
+						//Console.WriteLine($"Received {e.EventType} for match {e.MatchGuid}!");
+
+						if(e is Event_BallHit ballHit)
+						{
+							Console.WriteLine($"Received {ballHit.Players.Last().Name} hit the ball!");
+							var test = ballHit.Players.Last();
+							rl.SendCommand(new Command_ChangePOV
+							{
+								Focus = ballHit.Players.Last().Shortcut.ToString(),
+								Perspective = PerspectiveType.PlayerView,
+							});
+						}
 					}
 				}
 				catch (IOException e)

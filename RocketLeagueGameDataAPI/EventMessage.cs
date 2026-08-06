@@ -18,6 +18,7 @@ namespace RocketLeagueGameDataAPI
 			{
 				EventType.UpdateState =>  JsonSerializer.Deserialize<Event_UpdateState>(stream, options),
 				EventType.BallHit =>  JsonSerializer.Deserialize<Event_BallHit>(stream, options),
+				EventType.BoostPickup => JsonSerializer.Deserialize<Event_BoostPickup>(stream, options),
 				EventType.ClockUpdatedSeconds =>  JsonSerializer.Deserialize<Event_ClockUpdatedSeconds>(stream, options),
 				EventType.CountdownBegin =>  JsonSerializer.Deserialize<Event_CountdownBegin>(stream, options),
 				EventType.CrossbarHit =>  JsonSerializer.Deserialize<Event_CrossbarHit>(stream, options),
@@ -31,6 +32,8 @@ namespace RocketLeagueGameDataAPI
 				EventType.MatchEnded =>  JsonSerializer.Deserialize<Event_MatchEnded>(stream, options),
 				EventType.MatchPaused =>  JsonSerializer.Deserialize<Event_MatchPaused>(stream, options),
 				EventType.MatchUnpaused =>  JsonSerializer.Deserialize<Event_MatchUnpaused>(stream, options),
+				EventType.PlayerJoined => JsonSerializer.Deserialize<Event_PlayerJoined>(stream, options),
+				EventType.PlayerLeft => JsonSerializer.Deserialize<Event_PlayerLeft>(stream, options),
 				EventType.PodiumStart =>  JsonSerializer.Deserialize<Event_PodiumStart>(stream, options),
 				EventType.ReplayCreated =>  JsonSerializer.Deserialize<Event_ReplayCreated>(stream, options),
 				EventType.RoundStarted =>  JsonSerializer.Deserialize<Event_RoundStarted>(stream, options),
@@ -46,6 +49,7 @@ namespace RocketLeagueGameDataAPI
 			{
 				EventType.UpdateState => await JsonSerializer.DeserializeAsync<Event_UpdateState>(stream, options, cancellationToken),
 				EventType.BallHit => await JsonSerializer.DeserializeAsync<Event_BallHit>(stream, options, cancellationToken),
+				EventType.BoostPickup => await JsonSerializer.DeserializeAsync<Event_BoostPickup>(stream, options, cancellationToken),
 				EventType.ClockUpdatedSeconds => await JsonSerializer.DeserializeAsync<Event_ClockUpdatedSeconds>(stream, options, cancellationToken),
 				EventType.CountdownBegin => await JsonSerializer.DeserializeAsync<Event_CountdownBegin>(stream, options, cancellationToken),
 				EventType.CrossbarHit => await JsonSerializer.DeserializeAsync<Event_CrossbarHit>(stream, options, cancellationToken),
@@ -59,6 +63,8 @@ namespace RocketLeagueGameDataAPI
 				EventType.MatchEnded => await JsonSerializer.DeserializeAsync<Event_MatchEnded>(stream, options, cancellationToken),
 				EventType.MatchPaused => await JsonSerializer.DeserializeAsync<Event_MatchPaused>(stream, options, cancellationToken),
 				EventType.MatchUnpaused => await JsonSerializer.DeserializeAsync<Event_MatchUnpaused>(stream, options, cancellationToken),
+				EventType.PlayerJoined => await JsonSerializer.DeserializeAsync<Event_PlayerJoined>(stream, options, cancellationToken),
+				EventType.PlayerLeft => await JsonSerializer.DeserializeAsync<Event_PlayerLeft>(stream, options, cancellationToken),
 				EventType.PodiumStart => await JsonSerializer.DeserializeAsync<Event_PodiumStart>(stream, options, cancellationToken),
 				EventType.ReplayCreated => await JsonSerializer.DeserializeAsync<Event_ReplayCreated>(stream, options, cancellationToken),
 				EventType.RoundStarted => await JsonSerializer.DeserializeAsync<Event_RoundStarted>(stream, options, cancellationToken),
@@ -74,6 +80,8 @@ namespace RocketLeagueGameDataAPI
 		UpdateState,
 		/// <summary>Sent one frame after the ball is hit.</summary>
 		BallHit,
+		/// <summary>Sent when a vehicle collects a boost pad or pill.</summary>
+		BoostPickup,
 		/// <summary>Sent when the in-game clock has changed.</summary>
 		ClockUpdatedSeconds,
 		/// <summary>Sent at the start of each round when the countdown starts.</summary>
@@ -100,6 +108,10 @@ namespace RocketLeagueGameDataAPI
 		MatchPaused,
 		/// <summary>Sent when the game is unpaused by a match admin.</summary>
 		MatchUnpaused,
+		/// <summary>Sent when a player is added to the current match.</summary>
+		PlayerJoined,
+		/// <summary>Sent when a player is removed from the current match.</summary>
+		PlayerLeft,
 		/// <summary>Sent when the game enters the podium state after the match ends.</summary>
 		PodiumStart,
 		/// <summary>Sent when a replay is initialized. Does not pertain to goal replays, only replays you load via the Match History menu.</summary>

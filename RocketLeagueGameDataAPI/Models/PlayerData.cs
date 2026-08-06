@@ -43,6 +43,10 @@ namespace RocketLeagueGameDataAPI.Models
 		/// </summary>
 		public required int Demos { get; set; }
 		/// <summary>
+		/// Asset names of the equipped loadout for the player's current team sorted by product slot.
+		/// </summary>
+		public required string[] Loadout { get; set; }
+		/// <summary>
 		/// <see langword="True"/> if the player currently has a vehicle.
 		/// </summary>
 		/// <remarks>SPECTATOR.</remarks>
@@ -93,5 +97,10 @@ namespace RocketLeagueGameDataAPI.Models
 		/// </summary>
 		/// <remarks>SPECTATOR.</remarks>
 		public bool? bSupersonic { get; set; }
+		/// <summary>
+		/// Class name of the player's currently available Rumble pickup. Omitted when not playing with rumble powerups.
+		/// </summary>
+		/// <remarks><para>SPECTATOR.</para>CONDITIONAL (Rumble powerups need to be enabled).</remarks>
+		public string? PickupClass { get; set; }
 	}
 }
