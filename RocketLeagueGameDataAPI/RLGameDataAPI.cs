@@ -3,7 +3,6 @@ using RocketLeagueGameDataAPI.Events;
 using RocketLeagueGameDataAPI.JsonConverters;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -11,8 +10,9 @@ using System.Text.Json.Serialization;
 namespace RocketLeagueGameDataAPI
 {
 	/// <summary>
-	/// Simple wrapper for the Rocket League Game Data API.
+	/// Simple wrapper for the Rocket League Game Data API using TCP Socket.
 	/// </summary>
+	[Obsolete("This class is obsolete. Use the new RLGameDataAPIWS instead. TCP doesn't support the new commands.")]
 	public class RLGameDataAPI : IDisposable
 	{
 		public const int gamePort = 49123;
@@ -173,30 +173,6 @@ namespace RocketLeagueGameDataAPI
 
 			received.Seek(0, SeekOrigin.Begin);
 			return await ProccessMessageAsync(received, cancellationToken);
-		}
-
-		/// <summary>
-		/// Writes a <see cref="CommandData"/> to the <see cref="NetworkStream"/> to be processed by the game.
-		/// </summary>
-		/// <param name="command">The command to be sent.</param>
-		/// <exception cref="InvalidOperationException"></exception>
-		/// <exception cref="IOException"></exception>
-		/// <exception cref="SocketException"></exception>
-		/// <exception cref="ObjectDisposedException"></exception>
-		public void SendCommand(CommandData command)
-		{
-			var _stream = _tcpClient.GetStream();
-			if (!_stream.CanWrite) throw new Exception("Cannot write to the underlying NetworkStream.");
-
-			var commandMessage = CommandMessage.CreateCommandMessage(command, _jsonOptions);
-			using var stream = new MemoryStream();
-			JsonSerializer.Serialize(stream, commandMessage, _jsonOptions);
-			var test = Encoding.UTF8.GetString(stream.ToArray());
-			test = test.Replace("\\\"", "\"");
-			test = "{\"Command\":\"ChangePOV\",\"Data\":{\"Focus\":\"1\",\"Perspective\":\"PlayerView\"}}";
-			Console.WriteLine(test);
-			_stream.Write(Encoding.UTF8.GetBytes(test));
-			_stream.Flush();
 		}
 
 		/// <summary>

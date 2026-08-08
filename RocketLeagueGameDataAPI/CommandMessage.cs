@@ -1,84 +1,55 @@
 ﻿using RocketLeagueGameDataAPI.Commands;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace RocketLeagueGameDataAPI
 {
-	[JsonSerializable(typeof(CommandMessage))]
-	internal class CommandMessage
+	internal abstract class CommandMessage
 	{
-		public required CommandType Command { get; set; }
-		public required string Data { get; set; }
-
 		public static CommandMessage CreateCommandMessage(CommandData command, JsonSerializerOptions? options = null)
 		{
-			using var stream = new MemoryStream();
-			switch (command.CommandType)
+			return command.CommandType switch
 			{
-				case CommandType.ChangePOV:
-					JsonSerializer.Serialize(stream, command, typeof(Command_ChangePOV), options);
-					break;
-				case CommandType.LoadReplay:
-					JsonSerializer.Serialize(stream, command, typeof(Command_LoadReplay), options);
-					break;
-				case CommandType.SeekReplay:
-					JsonSerializer.Serialize(stream, command, typeof(Command_SeekReplay), options);
-					break;
-				case CommandType.SetGameSpeed:
-					JsonSerializer.Serialize(stream, command, typeof(Command_SetGameSpeed), options);
-					break;
-				case CommandType.SetHUDVisibility:
-					JsonSerializer.Serialize(stream, command, typeof(Command_SetHUDVisibility), options);
-					break;
-				case CommandType.SetMatchPaused:
-					JsonSerializer.Serialize(stream, command, typeof(Command_SetMatchPaused), options);
-					break;
-				default:
-					throw new UnknownCommandException($"Unexpected Command {command}");
-			}
-
-			return new CommandMessage()
-			{
-				Command = command.CommandType,
-				Data = Encoding.UTF8.GetString(stream.ToArray()),
+				CommandType.ChangePOV => CommandMessage<Command_ChangePOV>.CreateCommandMessage((Command_ChangePOV)command, options),
+				CommandType.LoadReplay => CommandMessage<Command_LoadReplay>.CreateCommandMessage((Command_LoadReplay)command, options),
+				CommandType.SeekReplay => CommandMessage<Command_SeekReplay>.CreateCommandMessage((Command_SeekReplay)command, options),
+				CommandType.SetGameSpeed => CommandMessage<Command_SetGameSpeed>.CreateCommandMessage((Command_SetGameSpeed)command, options),
+				CommandType.SetHUDVisibility => CommandMessage<Command_SetHUDVisibility>.CreateCommandMessage((Command_SetHUDVisibility)command, options),
+				CommandType.SetMatchPaused => CommandMessage<Command_SetMatchPaused>.CreateCommandMessage((Command_SetMatchPaused)command, options),
+				_ => throw new UnknownCommandException($"Unexpected Command {command}"),
 			};
 		}
 
-		//public static async ValueTask<CommandMessage> CreateCommandMessageAsync(CommandData command, JsonSerializerOptions? options = null, CancellationToken cancellationToken = default)
-		//{
-		//	using var stream = new MemoryStream();
-		//
-		//	switch (command.CommandType)
-		//	{
-		//		case CommandType.ChangePOV:
-		//			await JsonSerializer.SerializeAsync(stream, command, typeof(Command_ChangePOV), options, cancellationToken);
-		//			break;
-		//		case CommandType.LoadReplay:
-		//			await JsonSerializer.SerializeAsync(stream, command, typeof(Command_LoadReplay), options, cancellationToken);
-		//			break;
-		//		case CommandType.SeekReplay:
-		//			await JsonSerializer.SerializeAsync(stream, command, typeof(Command_SeekReplay), options, cancellationToken);
-		//			break;
-		//		case CommandType.SetGameSpeed:
-		//			await JsonSerializer.SerializeAsync(stream, command, typeof(Command_SetGameSpeed), options, cancellationToken);
-		//			break;
-		//		case CommandType.SetHUDVisibility:
-		//			await JsonSerializer.SerializeAsync(stream, command, typeof(Command_SetHUDVisibility), options, cancellationToken);
-		//			break;
-		//		case CommandType.SetMatchPaused:
-		//			await JsonSerializer.SerializeAsync(stream, command, typeof(Command_SetMatchPaused), options, cancellationToken);
-		//			break;
-		//		default:
-		//			throw new UnknownCommandException($"Unexpected Command {command}");
-		//	}
-		//
-		//	return new CommandMessage
-		//	{
-		//		Command = command.CommandType,
-		//		Data = Encoding.UTF8.GetString(stream.ToArray())
-		//	};
-		//}
+		public abstract Memory<byte> SerializeCommandMessage(JsonSerializerOptions? options = null);
+		public abstract ValueTask<byte[]> SerializeCommandMessageAsync(JsonSerializerOptions? options = null, CancellationToken cancellationToken = default);
+	}
+
+	[JsonSerializable(typeof(CommandMessage<>))]
+	internal class CommandMessage<T> : CommandMessage where T : CommandData
+	{
+		public required CommandType Command { get; set; }
+		public required T Data { get; set; }
+
+		internal static CommandMessage<T> CreateCommandMessage(T command, JsonSerializerOptions? options = null)
+		{
+			return new CommandMessage<T>()
+			{
+				Command = command.CommandType,
+				Data = command,
+			};
+		}
+
+		public override Memory<byte> SerializeCommandMessage(JsonSerializerOptions? options = null)
+		{
+			return JsonSerializer.SerializeToUtf8Bytes(this, options);
+		}
+
+		public override async ValueTask<byte[]> SerializeCommandMessageAsync(JsonSerializerOptions? options = null, CancellationToken cancellationToken = default)
+		{
+			using var stream = new MemoryStream();
+			await JsonSerializer.SerializeAsync(stream, this, options, cancellationToken);
+			return stream.ToArray();
+		}
 	}
 
 	public enum CommandType

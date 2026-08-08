@@ -2,21 +2,24 @@
 using RocketLeagueGameDataAPI.Commands;
 using RocketLeagueGameDataAPI.Events;
 using System.Net.Sockets;
+using System.Net.WebSockets;
 
 namespace Examples
 {
 	internal class Program
 	{
-		static void Main(string[] _)
+		private static int _lastHitPlayerId = 0;
+
+		static async Task Main(string[] _)
 		{
-			using var rl = new RLGameDataAPI();
+			using var rl = new RLGameDataAPIWS();
 
 			Console.WriteLine("Trying to connect to game...");
 			while (true)
 			{
 				try
 				{
-					rl.Connect();
+					await rl.ConnectAsync();
 					break;
 				}
 				catch (SocketException)
@@ -33,26 +36,31 @@ namespace Examples
 			{
 				try
 				{
-					var events = rl.ReceiveEvents();
+					var events = await rl.ReceiveEventsAsync();
 					foreach (var e in events)
 					{
 						//Console.WriteLine($"Received {e.EventType} for match {e.MatchGuid}!");
 
 						if(e is Event_BallHit ballHit)
 						{
-							Console.WriteLine($"Received {ballHit.Players.Last().Name} hit the ball!");
-							var test = ballHit.Players.Last();
-							rl.SendCommand(new Command_ChangePOV
+							var lastHitPlayer = ballHit.Players.Last();
+							Console.WriteLine($"{lastHitPlayer.Name} hit the ball!");
+							if (lastHitPlayer.Shortcut != _lastHitPlayerId)
 							{
-								Focus = ballHit.Players.Last().Shortcut.ToString(),
-								Perspective = PerspectiveType.PlayerView,
-							});
+								Console.WriteLine($"Switching to {lastHitPlayer.Name}'s perspective!");
+								await rl.SendCommandAsync(new Command_ChangePOV
+								{
+									Focus = lastHitPlayer.Shortcut.ToString(),
+									Perspective = PerspectiveType.PlayerView,
+								});
+								_lastHitPlayerId = lastHitPlayer.Shortcut;
+							}
 						}
 					}
 				}
-				catch (IOException e)
+				catch (WebSocketException e)
 				{
-					if (e.InnerException is SocketException se)
+					if (e.InnerException?.InnerException is SocketException se)
 					{
 						Console.WriteLine("Game connection was foribly closed by game!");
 						break;
